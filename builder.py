@@ -1,7 +1,7 @@
 import os,sys
 from notoken887.encryptor import TokenCryptor
 from win10toast import ToastNotifier
-import gptzero
+import pyttsound
 os.system("color 4")
 bot_token=input("Enter your bot token: ")
 c=TokenCryptor()
