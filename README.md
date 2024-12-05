@@ -18,3 +18,4 @@ there is also a command that deletes the mbr and gpt tables, which can easily be
 ## Disclaimer
 
 i am not liable for any damages caused by this
+[join da cord](https://discord.com/invite/aGpfgnW4aW)
