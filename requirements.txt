@@ -1,0 +1,8 @@
+discord.py
+requests
+psutil
+aiohttp
+pywin32
+pyperclip 
+
+
