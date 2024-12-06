@@ -19,3 +19,7 @@ there is also a command that deletes the mbr and gpt tables, which can easily be
 
 i am not liable for any damages caused by this
 [join da cord](https://discord.com/invite/aGpfgnW4aW)
+
+## SETUP
+in order to setup, run setup.bat then run builder.py
+it will ask for your bot token, enter it 
