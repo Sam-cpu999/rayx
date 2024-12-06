@@ -1,10 +1,10 @@
-import ctypes, sys, os, random, string, time
-def ensure_admin_and_check_ran(log_file):
-    if not os.path.exists(log_file):
-        if not ctypes.windll.shell32.IsUserAnAdmin():
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
+import ctypes, sys, time
+def ensure_admin():
+    if ctypes.windll.shell32.IsUserAnAdmin():
+        return
+    while True:
+        result = ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
+        if result <= 32:
             time.sleep(0.1)
-            if not ctypes.windll.shell32.IsUserAnAdmin():
-                ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
-        with open(log_file, "w") as f:
-            f.write(''.join(random.choices(string.ascii_letters + string.digits, k=50)))
+        else:
+            return

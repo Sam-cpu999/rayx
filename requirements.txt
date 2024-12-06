@@ -4,5 +4,6 @@ psutil
 aiohttp
 pywin32
 pyperclip 
-
-
+rotatescreen
+ctypes
+pywin32
