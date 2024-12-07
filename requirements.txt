@@ -4,6 +4,8 @@ psutil
 aiohttp
 pywin32
 pyperclip 
-rotatescreen
-ctypes
+rotate-screen
 pywin32
+GPUtil
+py-cpuinfo
+aiohttp
