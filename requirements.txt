@@ -10,3 +10,4 @@ GPUtil
 py-cpuinfo
 aiohttp
 pygame
+win10toast
