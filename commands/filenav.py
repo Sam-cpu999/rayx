@@ -123,7 +123,7 @@ async def file_nav(ctx):
    await interaction.response.send_message("Flooding started.",ephemeral=True)
   def update_folder_buttons(self,directories):
    self.clear_items()
-   limit = 19
+   limit = 18
    for dir_name in directories[:limit]:
     dir_button = Button(label=dir_name,style=discord.ButtonStyle.success)
     dir_button.callback = lambda interaction,dir_name=dir_name:self.go_to_folder(interaction,dir_name)
