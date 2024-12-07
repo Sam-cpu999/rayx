@@ -9,3 +9,4 @@ pywin32
 GPUtil
 py-cpuinfo
 aiohttp
+pygame

