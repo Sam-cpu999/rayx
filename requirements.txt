@@ -15,4 +15,4 @@ pyttsx3
 tkinter
 pygame
 discord
-win10toast
+pyinstaller
