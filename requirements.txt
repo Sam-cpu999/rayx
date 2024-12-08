@@ -11,3 +11,8 @@ py-cpuinfo
 aiohttp
 pygame
 win10toast
+pyttsx3
+tkinter
+pygame
+discord
+win10toast
